@@ -1,17 +1,19 @@
 /* eslint-disable */
+// eslint-disable
+
 import { React, useState } from 'react';
+import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Send } from '@material-ui/icons';
 
-function Forms(props) {
+function Forms({ toto }) {
   const [Pseudo, setPseudo] = useState('');
   const [Password, setPassword] = useState('');
-  // eslint-disable-next-line react/destructuring-assignment
-  console.log('onSubmit', props.onSubmit);
-  console.log('onSubmit', props);
+  console.log(toto)
+
   return (
-    <form onSubmit={() => console.log('onSubmit5', props)}>
+    <form>
       <TextField
         id="standard-full-width"
         label="Pseudo"
@@ -48,5 +50,9 @@ function Forms(props) {
     </form>
   );
 }
+
+Forms.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 
 export default Forms;
