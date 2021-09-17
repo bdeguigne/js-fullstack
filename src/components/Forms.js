@@ -1,19 +1,21 @@
-/* eslint-disable */
-// eslint-disable
-
 import { React, useState } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Send } from '@material-ui/icons';
 
-function Forms({ toto }) {
+function Forms({ onSubmit }) {
   const [Pseudo, setPseudo] = useState('');
   const [Password, setPassword] = useState('');
-  console.log(toto)
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(Password, Pseudo);
+    console.log(Password, Pseudo);
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <TextField
         id="standard-full-width"
         label="Pseudo"
