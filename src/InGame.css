@@ -4,7 +4,6 @@
   grid-template-columns: repeat(2, 4rem);
   grid-template-rows: 7rem 2rem 7rem;
   gap: .5rem;
-  cursor: pointer;
   justify-content: center;
   padding-top: 1rem;
   background-color: darkgreen;
@@ -13,7 +12,6 @@
 .deck {
   height: 100%;
   width: 100%;
-  border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,13 +19,6 @@
   border-radius: 0.5rem;
   color: white;
   user-select: none;
-}
-
-.player-deck {
-  background-color: blue;
-}
-.computer-deck {
-  background-color: red;
 }
 
 .text {
@@ -39,12 +30,13 @@
 
   .card {
     position: relative;
-    height: 100%;
-    width: 100%;
+    height: 100px;
+    width: 100px;
     border: 1px solid black;
     border-radius: .5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 4rem;
+    cursor: pointer;
   }
