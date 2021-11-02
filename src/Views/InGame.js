@@ -22,6 +22,8 @@ export default function Board() {
   const [textwinner, settextwinner] = React.useState(
     'Press Start Round to begin',
   );
+  const [pointCounterA, setpointCounterA] = React.useState(0);
+  const [pointCounterB, setpointCounterB] = React.useState(0);
   const [gameStatus, setGameStatus] = React.useState('NOTSTARTED');
 
   function handleStartClick() {
@@ -35,12 +37,15 @@ export default function Board() {
         playerBCard.value,
         'player A value =>',
         playerACard.value,
+        playerADeck,
       );
 
       if (playerACard.value > playerBCard.value) {
         settextwinner('Winner is Pseudo player A');
+        setpointCounterA(pointCounterA + 1);
       } else {
         settextwinner('Winner is Pseudo player B');
+        setpointCounterB(pointCounterB + 1);
       }
     }
   }, [playerACard, playerBCard]);
@@ -98,6 +103,7 @@ export default function Board() {
               <img className="card" src={playerACard.assets_black} alt="" />
             )}
           </div>
+          <span> {pointCounterA}</span>
           <div className="text">{textwinner}</div>
           <div>
             <StartRoundButton />
@@ -105,6 +111,7 @@ export default function Board() {
           <div className="player-deck deck">
             <img className="card" src={cardBack} alt="ImageCardBack" />
           </div>
+          <span> {pointCounterB}</span>
           <div className="player-card-slot card-slot">
             {playerBCard !== undefined && (
               <img className="card" src={playerBCard.assets_white} alt="" />
