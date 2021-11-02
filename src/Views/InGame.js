@@ -29,7 +29,7 @@ export default function Board() {
   }
 
   React.useEffect(() => {
-    if (playerACard.value !== undefined && playerBCard.value !== undefined) {
+    if (playerACard?.value !== undefined && playerBCard?.value !== undefined) {
       console.log(
         'player B value =>',
         playerBCard.value,
