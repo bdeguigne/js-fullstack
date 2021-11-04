@@ -1,0 +1,23 @@
+html {
+    height: 100%;
+    background-color: darkgreen;
+    border-color:lightgreen;
+}
+
+.Container {
+    display: flex;
+    flex-direction: column;
+  justify-items: center;
+  align-items: center;
+
+}
+
+.Forms {
+    background-color:yellow;
+    display: flex;
+    width: 500px;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 20px;
+    margin: auto;
+}

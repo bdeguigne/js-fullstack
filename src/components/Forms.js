@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Send } from '@material-ui/icons';
+import '../Home.css';
 
 function Forms({ onSubmit }) {
   const [Pseudo, setPseudo] = useState('');
@@ -15,11 +16,11 @@ function Forms({ onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="Forms" onSubmit={handleSubmit}>
       <TextField
-        id="standard-full-width"
+        id="Pseudo"
         label="Pseudo"
-        style={{ margin: 8 }}
+        style={{ margin: 8, backgroundColor: 'lightgreen' }}
         placeholder="Pseudo"
         margin="normal"
         value={Pseudo}
@@ -30,9 +31,10 @@ function Forms({ onSubmit }) {
         }}
       />
       <TextField
-        id="standard-full-width"
+        id="Password"
+        className="Field"
         label="Password"
-        style={{ margin: 8 }}
+        style={{ margin: 8, backgroundColor: 'lightgreen' }}
         placeholder="Password"
         margin="normal"
         required
@@ -45,7 +47,17 @@ function Forms({ onSubmit }) {
         }}
       />
       <div>
-        <Button type="submit" variant="contained" endIcon={<Send />}>
+        <Button
+          style={{
+            marginTop: '12px',
+            backgroundColor: 'lightgreen',
+            color: 'black',
+          }}
+          fullWidth="100%"
+          type="submit"
+          variant="contained"
+          endIcon={<Send />}
+        >
           Login
         </Button>
       </div>

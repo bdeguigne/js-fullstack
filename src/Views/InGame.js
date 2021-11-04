@@ -68,16 +68,28 @@ export default function Board() {
 
   function StartGameButton() {
     return (
-      <button type="button" onClick={handleStartClick}>
-        START GAME
+      <button
+        className="button-82-pushable"
+        type="button"
+        onClick={handleStartClick}
+      >
+        <span className="button-82-shadow" />
+        <span className="button-82-edge" />
+        <span className="button-82-front text">Start Game</span>
       </button>
     );
   }
 
   function StartRoundButton() {
     return (
-      <button type="button" onClick={handleRoundClick}>
-        START ROUND
+      <button
+        className="button-82-pushable"
+        type="button"
+        onClick={handleRoundClick}
+      >
+        <span className="button-82-shadow" />
+        <span className="button-82-edge" />
+        <span className="button-82-front text">Start Round</span>
       </button>
     );
   }
@@ -106,27 +118,33 @@ export default function Board() {
     <div className="board">
       {gameStatus === 'INPROGRESS' && (
         <>
-          <div className="computer-deck deck">
-            <img className="card" src={cardBack} alt="ImageCardBack" />
+          <div className="top-board">
+            <div className="computer-deck">
+              <img className="card" src={cardBack} alt="ImageCardBack" />
+            </div>
+            <div className="card-slot">
+              {playerACard !== undefined && (
+                <img className="card" src={playerACard.assets_black} alt="" />
+              )}
+            </div>
           </div>
-          <div className="computer-card-slot card-slot">
-            {playerACard !== undefined && (
-              <img className="card" src={playerACard.assets_black} alt="" />
-            )}
+          <div className="middle-board">
+            <span> {pointCounterA}</span>
+            <div className="text">{textwinner}</div>
+            <div>
+              <StartRoundButton />
+            </div>
           </div>
-          <span> {pointCounterA}</span>
-          <div className="text">{textwinner}</div>
-          <div>
-            <StartRoundButton />
-          </div>
-          <div className="player-deck deck">
-            <img className="card" src={cardBack} alt="ImageCardBack" />
-          </div>
-          <span> {pointCounterB}</span>
-          <div className="player-card-slot card-slot">
-            {playerBCard !== undefined && (
-              <img className="card" src={playerBCard.assets_white} alt="" />
-            )}
+          <div className="bot-board">
+            <div className="player-deck">
+              <img className="card" src={cardBack} alt="ImageCardBack" />
+            </div>
+            <span> {pointCounterB}</span>
+            <div className="card-slot">
+              {playerBCard !== undefined && (
+                <img className="card" src={playerBCard.assets_white} alt="" />
+              )}
+            </div>
           </div>
         </>
       )}
