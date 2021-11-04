@@ -1,6 +1,6 @@
 import Forms from '../components/Forms';
 import MediaControlCard from './Lobby';
-import Board from './InGame';
+// import Board from './InGame';
 
 function Home() {
   return (
@@ -8,7 +8,7 @@ function Home() {
       <h1> Welcome To War Card Game</h1>
       <Forms onSubmit={(Password, Pseudo) => console.log(Password, Pseudo)} />
       <MediaControlCard />
-      <Board />
+      {/* <Board /> */}
     </div>
   );
 }
