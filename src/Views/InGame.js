@@ -43,10 +43,21 @@ export default function Board() {
       if (playerACard.value > playerBCard.value) {
         settextwinner('Winner is Pseudo player A');
         setpointCounterA(pointCounterA + 1);
-      } else {
+      } else if (playerBCard.value > playerACard.value) {
         settextwinner('Winner is Pseudo player B');
         setpointCounterB(pointCounterB + 1);
+      } else if (playerACard.value === playerBCard.value) {
+        setpointCounterA(pointCounterA + 0);
+        setpointCounterB(pointCounterB + 0);
       }
+    }
+    if (playerADeck.length === 0 && gameStatus === 'INPROGRESS') {
+      if (pointCounterA > pointCounterB) {
+        settextwinner('player A win');
+      } else {
+        settextwinner('PLayer B win');
+      }
+      setGameStatus('FINISHED');
     }
   }, [playerACard, playerBCard]);
 
@@ -124,6 +135,7 @@ export default function Board() {
           <StartGameButton />
         </div>
       )}
+      {gameStatus === 'FINISHED' && <div> {textwinner} </div>}
     </div>
   );
 }
