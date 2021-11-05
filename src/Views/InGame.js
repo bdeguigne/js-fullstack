@@ -1,7 +1,9 @@
 import React from 'react';
 import '../InGame.css';
+import Fade from 'react-reveal/Fade';
 import cardBack from '../card-back.png';
 import cards from '../Cards';
+import WinnerAnimation from '../components/AnimationGameEnd';
 
 export default function Board() {
   function shuffle() {
@@ -120,7 +122,9 @@ export default function Board() {
         <>
           <div className="top-board">
             <div className="computer-deck">
-              <img className="card" src={cardBack} alt="ImageCardBack" />
+              <Fade top>
+                <img className="card" src={cardBack} alt="ImageCardBack" />
+              </Fade>
             </div>
             <div className="card-slot">
               {playerACard !== undefined && (
@@ -137,7 +141,9 @@ export default function Board() {
           </div>
           <div className="bot-board">
             <div className="player-deck">
-              <img className="card" src={cardBack} alt="ImageCardBack" />
+              <Fade bottom>
+                <img className="card" src={cardBack} alt="ImageCardBack" />
+              </Fade>
             </div>
             <span> {pointCounterB}</span>
             <div className="card-slot">
@@ -153,7 +159,12 @@ export default function Board() {
           <StartGameButton />
         </div>
       )}
-      {gameStatus === 'FINISHED' && <div> {textwinner} </div>}
+      {gameStatus === 'FINISHED' && (
+        <div className="WinnerIs">
+          <WinnerAnimation className="Animation" />
+          {textwinner}
+        </div>
+      )}
     </div>
   );
 }
