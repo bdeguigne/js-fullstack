@@ -7,6 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fade from 'react-reveal/Flip';
 import sword from '../Sword.jpg';
+import bouclier2 from '../bouclier2.jpg';
 
 const useStyles = makeStyles({
   root: {
@@ -17,25 +18,93 @@ const useStyles = makeStyles({
 
 export default function ImgMediaCard() {
   const classes = useStyles();
+  // const status = null;
+  const Games = [
+    {
+      id: 1,
+      status: 'NotStarted',
+      playerOne: 'bibiii',
+      playerTwo: 'loulou',
+    },
+    {
+      id: 2,
+      status: 'InProgress',
+      playerOne: 'volta',
+      playerTwo: 'hector',
+    },
+  ];
+
+  function CheckStatus() {
+    const cardarray = [];
+    for (let i = 0; i < Games.length; i += 1) {
+      if (Games.at(i).status === 'InProgress') {
+        cardarray.push(
+          <Card className={classes.root}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                alt="Game one"
+                height="240px"
+                image={sword}
+                title="Game One"
+              />
+              <CardContent>
+                <CheckPlayer
+                  playerOne={Games.at(i).playerOne}
+                  playerTwo={Games.at(i).playerTwo}
+                />
+              </CardContent>
+            </CardActionArea>
+          </Card>,
+        );
+      }
+      if (Games.at(i).status === 'NotStarted') {
+        cardarray.push(
+          <Card className={classes.root}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                alt="Game one"
+                height="240px"
+                image={bouclier2}
+                title="Game One"
+              />
+              <CardContent>
+                <CheckPlayer
+                  playerOne={Games.at(i).playerOne}
+                  playerTwo={Games.at(i).playerTwo}
+                />
+              </CardContent>
+            </CardActionArea>
+          </Card>,
+        );
+      }
+    }
+    return cardarray;
+  }
+
+  function CheckPlayer(playerOne, playerTwo) {
+    console.log('TEEEEEEEEEEEEEST');
+    console.log(playerOne);
+    if (playerOne != null && playerTwo != null) {
+      const phr = `Game :${playerOne.playerOne} vs ${playerOne.playerTwo}`;
+      return (
+        <Typography gutterBottom variant="h5">
+          {phr}
+        </Typography>
+      );
+    }
+
+    return (
+      <Typography gutterBottom variant="h5">
+        No player
+      </Typography>
+    );
+  }
 
   return (
     <Fade top cascade>
-      <Card className={classes.root}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            alt="Game one"
-            height="240px"
-            image={sword}
-            title="Game One"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5">
-              Game Number One
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      <CheckStatus />
     </Fade>
   );
 }
