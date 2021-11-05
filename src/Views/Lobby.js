@@ -24,7 +24,11 @@ export default function ImgMediaCard() {
 
   React.useEffect(() => {
     console.log('ca c est lourd !!!');
-    socket.emit('LOBBY JOINED');
+    socket.emit('lobby', {
+      event: 'join',
+      playerId: '1234',
+      roomId: '1234',
+    });
   }, []);
   const Games = [
     {
