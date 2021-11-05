@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Fade from 'react-reveal/Flip';
 import sword from '../Sword.jpg';
 import bouclier2 from '../bouclier2.jpg';
+import { SocketContext } from '../socket';
 
 const useStyles = makeStyles({
   root: {
@@ -18,7 +19,13 @@ const useStyles = makeStyles({
 
 export default function ImgMediaCard() {
   const classes = useStyles();
+  const socket = React.useContext(SocketContext);
   // const status = null;
+
+  React.useEffect(() => {
+    console.log('ca c est lourd !!!');
+    socket.emit('LOBBY JOINED');
+  }, []);
   const Games = [
     {
       id: 1,
