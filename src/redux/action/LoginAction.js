@@ -4,7 +4,7 @@ export default function logUser(Pseudo, Password) {
   return async () => {
     const res = await axios({
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
       method: 'post',
       url: 'http://localhost:8080/users',
