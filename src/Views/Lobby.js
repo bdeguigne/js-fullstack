@@ -1,5 +1,7 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -11,6 +13,7 @@ import sword from '../Sword.jpg';
 import bouclier2 from '../bouclier2.jpg';
 import { SocketContext } from '../socket';
 import AppButton from './AppButton';
+import { getAllLobby, createLobby } from '../redux/action/LobbyAction';
 
 const useStyles = makeStyles({
   root: {
@@ -57,8 +60,15 @@ export default function ImgMediaCard() {
   const socket = React.useContext(SocketContext);
 
   React.useEffect(() => {
-    socket.on('lobby', (message) => {
-      console.log('ON LOBBY', message);
+    // socket.on('lobby', (message) => {
+    //   console.log('ON LOBBY', message);
+    // });
+    props.getAllLobby();
+    console.log('ca c est lourd !!!');
+    socket.emit('lobby', {
+      event: 'join',
+      playerId: '1234',
+      roomId: '1234',
     });
   }, []);
 
@@ -147,3 +157,16 @@ export default function ImgMediaCard() {
     </Fade>
   );
 }
+
+ImgMediaCard.propTypes = {
+  getAllLobby: PropTypes.func.isRequired,
+};
+
+const actionCreators = {
+  getAllLobby,
+  createLobby,
+};
+
+const connectedLobby = connect(null, actionCreators)(ImgMediaCard);
+
+export default connectedLobby;
