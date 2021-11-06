@@ -55,7 +55,7 @@ const games = [
   },
 ];
 
-export default function ImgMediaCard() {
+function ImgMediaCard(props) {
   const classes = useStyles();
   const socket = React.useContext(SocketContext);
 
