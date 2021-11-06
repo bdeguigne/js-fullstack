@@ -1,4 +1,5 @@
 import React from 'react';
+import Grid from '@mui/material/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -9,6 +10,7 @@ import Fade from 'react-reveal/Flip';
 import sword from '../Sword.jpg';
 import bouclier2 from '../bouclier2.jpg';
 import { SocketContext } from '../socket';
+import AppButton from './AppButton';
 
 const useStyles = makeStyles({
   root: {
@@ -16,6 +18,39 @@ const useStyles = makeStyles({
     height: 300,
   },
 });
+
+const games = [
+  {
+    id: 1,
+    status: 'NotStarted',
+    playerOne: 'bibiii',
+    playerTwo: 'loulou',
+  },
+  {
+    id: 2,
+    status: 'InProgress',
+    playerOne: 'volta',
+    playerTwo: 'hector',
+  },
+  {
+    id: 2,
+    status: 'InProgress',
+    playerOne: 'volta',
+    playerTwo: 'hector',
+  },
+  {
+    id: 2,
+    status: 'InProgress',
+    playerOne: 'volta',
+    playerTwo: 'hector',
+  },
+  {
+    id: 2,
+    status: 'InProgress',
+    playerOne: 'volta',
+    playerTwo: 'hector',
+  },
+];
 
 export default function ImgMediaCard() {
   const classes = useStyles();
@@ -35,76 +70,7 @@ export default function ImgMediaCard() {
     });
   };
 
-  const Games = [
-    {
-      id: 1,
-      status: 'NotStarted',
-      playerOne: 'bibiii',
-      playerTwo: 'loulou',
-    },
-    {
-      id: 2,
-      status: 'InProgress',
-      playerOne: 'volta',
-      playerTwo: 'hector',
-    },
-  ];
-
-  function CheckStatus() {
-    const cardarray = [];
-    for (let i = 0; i < Games.length; i += 1) {
-      if (Games.at(i).status === 'InProgress') {
-        cardarray.push(
-          <Card
-            className={classes.root}
-            onClick={() => emit('toto', Games.at(i).playerOne)}
-          >
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                alt="Game one"
-                height="240px"
-                image={sword}
-                title="Game One"
-              />
-              <CardContent>
-                <CheckPlayer
-                  playerOne={Games.at(i).playerOne}
-                  playerTwo={Games.at(i).playerTwo}
-                />
-              </CardContent>
-            </CardActionArea>
-          </Card>,
-        );
-      }
-      if (Games.at(i).status === 'NotStarted') {
-        cardarray.push(
-          <Card className={classes.root}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                alt="Game one"
-                height="240px"
-                image={bouclier2}
-                title="Game One"
-              />
-              <CardContent>
-                <CheckPlayer
-                  playerOne={Games.at(i).playerOne}
-                  playerTwo={Games.at(i).playerTwo}
-                />
-              </CardContent>
-            </CardActionArea>
-          </Card>,
-        );
-      }
-    }
-    return cardarray;
-  }
-
   function CheckPlayer(playerOne, playerTwo) {
-    console.log('TEEEEEEEEEEEEEST');
-    console.log(playerOne);
     if (playerOne != null && playerTwo != null) {
       const phr = `Game :${playerOne.playerOne} vs ${playerOne.playerTwo}`;
       return (
@@ -123,7 +89,61 @@ export default function ImgMediaCard() {
 
   return (
     <Fade top cascade>
-      <CheckStatus />
+      <Grid container spacing={2}>
+        {games.map((game) => {
+          if (game.status === 'InProgress') {
+            return (
+              <Grid item>
+                <Card
+                  className={classes.root}
+                  onClick={() => emit('toto', game.playerOne)}
+                >
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      alt="Game one"
+                      height="240px"
+                      image={sword}
+                      title="Game One"
+                    />
+                    <CardContent>
+                      <CheckPlayer
+                        playerOne={game.playerOne}
+                        playerTwo={game.playerTwo}
+                      />
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            );
+          }
+          return (
+            <Grid item>
+              <Card className={classes.root}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    alt="Game one"
+                    height="240px"
+                    image={bouclier2}
+                    title="Game One"
+                  />
+                  <CardContent>
+                    <CheckPlayer
+                      playerOne={game.playerOne}
+                      playerTwo={game.playerTwo}
+                    />
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          );
+        })}
+      </Grid>
+      <AppButton
+        text="Create Lobby"
+        handleRoundClick={() => console.log('test')}
+      />
     </Fade>
   );
 }

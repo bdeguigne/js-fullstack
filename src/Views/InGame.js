@@ -4,6 +4,7 @@ import Fade from 'react-reveal/Fade';
 import cardBack from '../card-back.png';
 import cards from '../Cards';
 import WinnerAnimation from '../components/AnimationGameEnd';
+import StartRoundButton from './AppButton';
 
 export default function Board() {
   function shuffle() {
@@ -68,33 +69,19 @@ export default function Board() {
     setplayerBCard(playerBDeck.pop());
   }
 
-  function StartGameButton() {
-    return (
-      <button
-        className="button-82-pushable"
-        type="button"
-        onClick={handleStartClick}
-      >
-        <span className="button-82-shadow" />
-        <span className="button-82-edge" />
-        <span className="button-82-front text">Start Game</span>
-      </button>
-    );
-  }
-
-  function StartRoundButton() {
-    return (
-      <button
-        className="button-82-pushable"
-        type="button"
-        onClick={handleRoundClick}
-      >
-        <span className="button-82-shadow" />
-        <span className="button-82-edge" />
-        <span className="button-82-front text">Start Round</span>
-      </button>
-    );
-  }
+  // function StartGameButton() {
+  //   return (
+  //     <button
+  //       className="button-82-pushable"
+  //       type="button"
+  //       onClick={handleStartClick}
+  //     >
+  //       <span className="button-82-shadow" />
+  //       <span className="button-82-edge" />
+  //       <span className="button-82-front text">Start Game</span>
+  //     </button>
+  //   );
+  // }
 
   React.useEffect(() => {
     const deckMidpoint = Math.ceil(Deck.length / 2);
@@ -136,7 +123,10 @@ export default function Board() {
             <span> {pointCounterA}</span>
             <div className="text">{textwinner}</div>
             <div>
-              <StartRoundButton />
+              <StartRoundButton
+                text="Start Round"
+                handleRoundClick={() => handleRoundClick()}
+              />
             </div>
           </div>
           <div className="bot-board">
@@ -156,7 +146,10 @@ export default function Board() {
       )}
       {gameStatus === 'NOTSTARTED' && (
         <div>
-          <StartGameButton />
+          <StartRoundButton
+            text="Start"
+            handleRoundClick={() => handleStartClick()}
+          />
         </div>
       )}
       {gameStatus === 'FINISHED' && (
