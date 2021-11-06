@@ -20,16 +20,21 @@ const useStyles = makeStyles({
 export default function ImgMediaCard() {
   const classes = useStyles();
   const socket = React.useContext(SocketContext);
-  // const status = null;
 
   React.useEffect(() => {
-    console.log('ca c est lourd !!!');
-    socket.emit('lobby', {
-      event: 'join',
-      playerId: '1234',
-      roomId: '1234',
+    socket.on('lobby', (message) => {
+      console.log('ON LOBBY', message);
     });
   }, []);
+
+  const emit = (playerName, roomId) => {
+    socket.emit('lobby', {
+      event: 'join',
+      playerName,
+      roomId,
+    });
+  };
+
   const Games = [
     {
       id: 1,
@@ -50,7 +55,10 @@ export default function ImgMediaCard() {
     for (let i = 0; i < Games.length; i += 1) {
       if (Games.at(i).status === 'InProgress') {
         cardarray.push(
-          <Card className={classes.root}>
+          <Card
+            className={classes.root}
+            onClick={() => emit('toto', Games.at(i).playerOne)}
+          >
             <CardActionArea>
               <CardMedia
                 component="img"
