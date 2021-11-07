@@ -24,7 +24,7 @@ npm install
 npm run start:dev
 
 # OR if you want a builded version
-npm run start:prod
+npm run build:prod
 ```
 
 Runs the app in the development mode.\
