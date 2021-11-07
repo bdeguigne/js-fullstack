@@ -9,8 +9,9 @@ import cards from '../Cards';
 import WinnerAnimation from '../components/AnimationGameEnd';
 import StartRoundButton from './AppButton';
 import { SocketContext } from '../socket';
+import { setLobbyStatusInProgress } from '../redux/action/LobbyAction';
 
-function Board({ isReady, roomID }) {
+function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
   function shuffle() {
     for (let index = cards.length - 1; index > 0; index -= 1) {
       const NewIndex = Math.floor(Math.random() * (index + 1));
@@ -187,7 +188,10 @@ function Board({ isReady, roomID }) {
           {isReady ? (
             <StartRoundButton
               text="Start"
-              handleRoundClick={() => handleStartClick()}
+              handleRoundClick={() => {
+                setLobbyStatusInProgressAction(roomID);
+                return handleStartClick();
+              }}
             />
           ) : (
             <h1> WAITING FOR OTHER PLAYER </h1>
@@ -211,8 +215,8 @@ function Board({ isReady, roomID }) {
 Board.propTypes = {
   isReady: PropTypes.bool.isRequired,
   roomID: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/no-unused-prop-types
-  username: PropTypes.string.isRequired,
+  // username: PropTypes.string.isRequired,
+  setLobbyStatusInProgressAction: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -223,6 +227,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const connectedBoard = connect(mapStateToProps, {})(Board);
+const actionCreators = {
+  setLobbyStatusInProgressAction: setLobbyStatusInProgress,
+};
+
+const connectedBoard = connect(mapStateToProps, actionCreators)(Board);
 
 export default connectedBoard;
