@@ -12,5 +12,7 @@
     "StartRound.label": "Start Round",
     "Login.label": "Login",
     "StartG.label": "Start",
-    "End.label": "FINISHED"
+    "End.label": "FINISHED",
+    "Noplayer.label": "No player",
+    "Register.label": "Register"
 }

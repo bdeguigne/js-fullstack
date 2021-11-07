@@ -12,5 +12,7 @@
     "StartRound.label": "Lancer le tour",
     "Login.label": "Connexion",
     "StartG.label": "Commencer",
-    "End.label": "Fini"
+    "End.label": "Fini",
+    "Noplayer.label": "Pas de joueur",
+    "Register.label": "S'inscrire"
 }
