@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../InGame.css';
 import Fade from 'react-reveal/Fade';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import cardBack from '../card-back.png';
 import cards from '../Cards';
@@ -10,9 +11,17 @@ import WinnerAnimation from '../components/AnimationGameEnd';
 import StartRoundButton from './AppButton';
 import '../utils/i18n.js';
 import { SocketContext } from '../socket';
-import { setLobbyStatusInProgress } from '../redux/action/LobbyAction';
+import {
+  setLobbyStatusInProgress,
+  setLobbyStatusFinished,
+} from '../redux/action/LobbyAction';
 
-function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
+function Board({
+  isReady,
+  roomID,
+  setLobbyStatusInProgressAction,
+  setLobbyStatusFinishedAction,
+}) {
   function shuffle() {
     for (let index = cards.length - 1; index > 0; index -= 1) {
       const NewIndex = Math.floor(Math.random() * (index + 1));
@@ -22,24 +31,21 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
     }
     return cards;
   }
-
   const { t, i18n } = useTranslation();
-
   const changeLanguage = (event) => {
     i18n.changeLanguage(event.target.value);
   };
-
+  const navigate = useNavigate();
   const socket = React.useContext(SocketContext);
   const [Deck] = React.useState(shuffle());
   const [playerADeck, setplayerADeck] = React.useState([]);
-  const [playerBDeck, setplayerBDeck] = React.useState([]);
   const [playerACard, setplayerACard] = React.useState([]);
   const [playerBCard, setplayerBCard] = React.useState([]);
-  const [textwinner, settextwinner] = React.useState(
-    'Press Start Round to begin',
-  );
+  const [textwinner, settextwinner] = React.useState(`${t('Start.label')}`);
   const [pointCounterA, setpointCounterA] = React.useState(0);
   const [pointCounterB, setpointCounterB] = React.useState(0);
+  const [pseudoJ1, setpseudoj1] = useState('J1');
+  const [pseudoJ2, setpseudoj2] = useState('J2');
   const [gameStatus, setGameStatus] = React.useState('NOTSTARTED');
 
   function handleStartClick() {
@@ -49,36 +55,35 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
     });
   }
 
+  function handleLobbyClick() {
+    navigate('/lobby');
+  }
+
   React.useEffect(async () => {
     socket.on('game', (message) => {
       if (message.event === 'play') {
         setGameStatus('INPROGRESS');
-        console.log('en bas la en bas');
-        console.log('test');
+        setpseudoj1(message.playerA.username);
+        setpseudoj2(message.playerB.username);
         setplayerACard(message.playerA.card);
-        console.log(playerACard);
         setplayerBCard(message.playerB.card);
         setpointCounterA(message.playerA.points);
         setpointCounterB(message.playerB.points);
       }
-      console.log('game socket on', message);
+      if (message.event === 'finished') {
+        settextwinner(message.win);
+        setGameStatus('FINISHED');
+        setLobbyStatusFinishedAction(roomID);
+      }
     });
   }, []);
 
   React.useEffect(() => {
     if (playerACard?.value !== undefined && playerBCard?.value !== undefined) {
-      console.log(
-        'player B value =>',
-        playerBCard.value,
-        'player A value =>',
-        playerACard.value,
-        playerADeck,
-      );
-
       if (playerACard.value > playerBCard.value) {
-        settextwinner(`${t('PlayerAwin.label')}`);
+        settextwinner(`${t('WinnerB.label')} ${pseudoJ1}`);
       } else if (playerBCard.value > playerACard.value) {
-        settextwinner(`${t('PlayerBwin.label')}`);
+        settextwinner(`${t('WinnerB.label')} ${pseudoJ2}`);
       } else if (playerACard.value === playerBCard.value) {
         setpointCounterA(pointCounterA + 0);
         setpointCounterB(pointCounterB + 0);
@@ -86,9 +91,9 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
     }
     if (playerADeck.length === 0 && gameStatus === 'INPROGRESS') {
       if (pointCounterA > pointCounterB) {
-        settextwinner(`${t('WinnerA.label')}`);
+        settextwinner(`${pseudoJ1} ${t('PlayerBwin.label')}`);
       } else {
-        settextwinner(`${t('WinnerB.label')}`);
+        settextwinner(`${pseudoJ2} ${t('PlayerBwin.label')}`);
       }
       setGameStatus(`${t('End.label')}`);
     }
@@ -119,22 +124,7 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
   React.useEffect(() => {
     const deckMidpoint = Math.ceil(Deck.length / 2);
     setplayerADeck(Deck.slice(0, deckMidpoint));
-    setplayerBDeck(Deck.slice(deckMidpoint, Deck.length));
   }, [Deck]);
-
-  React.useEffect(() => {
-    console.log('Player A Black =>', playerADeck);
-    console.log('Player B White =>', playerBDeck);
-  }, [playerADeck, playerBDeck]);
-
-  React.useEffect(() => {
-    console.log('Player A Black Card  =>', playerACard);
-    console.log('Player B White Card =>', playerBCard);
-  }, [playerACard, playerBCard]);
-
-  React.useEffect(() => {
-    console.log('Game Status =>', gameStatus);
-  }, [gameStatus]);
 
   return (
     <div className="board" onChange={changeLanguage}>
@@ -150,11 +140,21 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
               {playerACard !== undefined && (
                 <img className="card" src={playerACard.assets_black} alt="" />
               )}
+              <span className="pointcounter"> {pointCounterA}</span>
             </div>
           </div>
           <div className="middle-board">
-            <span> {pointCounterA}</span>
-            <div className="text">{textwinner}</div>
+            <div
+              className="text"
+              style={{
+                fontSize: 'xxx-large',
+                fontFamily: 'cursive',
+                filter: 'drop-shadow(5px 4px 6px)',
+                color: 'yellow',
+              }}
+            >
+              {textwinner}
+            </div>
             <div>
               <StartRoundButton
                 text={t('StartRound.label')}
@@ -168,11 +168,11 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
                 <img className="card" src={cardBack} alt="ImageCardBack" />
               </Fade>
             </div>
-            <span> {pointCounterB}</span>
             <div className="card-slot">
               {playerBCard !== undefined && (
                 <img className="card" src={playerBCard.assets_white} alt="" />
               )}
+              <span className="pointcounter"> {pointCounterB}</span>
             </div>
           </div>
         </>
@@ -182,27 +182,37 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
           <input type="radio" value="en" name="language" defaultChecked />{' '}
           English
           <input type="radio" value="fr" name="language" /> français
-          <StartRoundButton
-            text={t('StartG.label')}
-            handleRoundClick={() => handleStartClick()}
-          />
           {isReady ? (
             <StartRoundButton
-              text="Start"
+              text={t('StartG.label')}
               handleRoundClick={() => {
                 setLobbyStatusInProgressAction(roomID);
                 return handleStartClick();
               }}
             />
           ) : (
-            <h1> WAITING FOR OTHER PLAYER </h1>
+            <h1> {t('Wait.label')} </h1>
           )}
         </div>
       )}
       {gameStatus === 'FINISHED' && (
-        <div className="WinnerIs">
+        <div
+          className="WinnerIs"
+          style={{
+            fontSize: 'xxx-large',
+            fontFamily: 'cursive',
+            filter: 'drop-shadow(5px 4px 6px)',
+            color: 'yellow',
+          }}
+        >
           <WinnerAnimation className="Animation" />
           {textwinner}
+          <div>
+            <StartRoundButton
+              text={t('Return.label')}
+              handleRoundClick={() => handleLobbyClick()}
+            />
+          </div>
         </div>
       )}
     </div>
@@ -214,6 +224,7 @@ Board.propTypes = {
   roomID: PropTypes.string.isRequired,
   // username: PropTypes.string.isRequired,
   setLobbyStatusInProgressAction: PropTypes.func.isRequired,
+  setLobbyStatusFinishedAction: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -226,6 +237,7 @@ const mapStateToProps = (state) => {
 
 const actionCreators = {
   setLobbyStatusInProgressAction: setLobbyStatusInProgress,
+  setLobbyStatusFinishedAction: setLobbyStatusFinished,
 };
 
 const connectedBoard = connect(mapStateToProps, actionCreators)(Board);

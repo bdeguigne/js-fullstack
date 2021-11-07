@@ -19,7 +19,6 @@ function Forms({ onSubmit, onRegister }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(Password, Pseudo);
-    console.log(Password, Pseudo);
   };
 
   return (

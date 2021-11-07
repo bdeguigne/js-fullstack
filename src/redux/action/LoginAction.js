@@ -3,7 +3,7 @@ import axios from 'axios';
 export function registerUser(Pseudo, Password) {
   return async () => {
     try {
-      const res = await axios({
+      await axios({
         headers: {
           'Content-Type': 'application/json',
         },
@@ -14,7 +14,6 @@ export function registerUser(Pseudo, Password) {
           password: Password,
         },
       });
-      console.log(res);
       return true;
     } catch {
       return false;
@@ -42,7 +41,6 @@ export function logUser(Pseudo, Password) {
           password: Password,
         },
       });
-      console.log(res);
       if (res.status === 200) {
         dispatch({ type: 'USER', user: res.data.username });
         return true;
