@@ -20,7 +20,7 @@ cd ../path/to/the/file
 ```
 ```
 npm install
-npm start:dev
+npm run start:dev
 ```
 
 Runs the app in the development mode.\

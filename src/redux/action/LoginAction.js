@@ -8,7 +8,7 @@ export function registerUser(Pseudo, Password) {
           'Content-Type': 'application/json',
         },
         method: 'post',
-        url: 'http://localhost:8080/users',
+        url: `${process.env.REACT_APP_API_END_POINT}/users`,
         data: {
           username: Pseudo,
           password: Password,
@@ -35,7 +35,7 @@ export function logUser(Pseudo, Password) {
           'Content-Type': 'application/json',
         },
         method: 'post',
-        url: 'http://localhost:8080/auth/login',
+        url: `${process.env.REACT_APP_API_END_POINT}/auth/login`,
         data: {
           username: Pseudo,
           password: Password,

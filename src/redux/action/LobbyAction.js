@@ -8,7 +8,7 @@ export function getAllLobby() {
           'Content-Type': 'application/json',
         },
         method: 'get',
-        url: 'http://localhost:8080/lobby',
+        url: `${process.env.REACT_APP_API_END_POINT}/lobby`,
       });
       return res.data;
     } catch {
@@ -25,7 +25,7 @@ export function createLobby(playerOne) {
           'Content-Type': 'application/json',
         },
         method: 'post',
-        url: 'http://localhost:8080/lobby',
+        url: `${process.env.REACT_APP_API_END_POINT}/lobby`,
         data: {
           playerA: playerOne,
         },
@@ -45,7 +45,7 @@ export function setLobbyStatusInProgress(roomId) {
           'Content-Type': 'application/json',
         },
         method: 'patch',
-        url: `http://localhost:8080/lobby/${roomId}`,
+        url: `${process.env.REACT_APP_API_END_POINT}/lobby/${roomId}`,
         data: {
           status: 'IN_PROGRESS',
         },
@@ -65,7 +65,7 @@ export function setLobbyStatusFinished(roomId) {
           'Content-Type': 'application/json',
         },
         method: 'patch',
-        url: `http://localhost:8080/lobby/${roomId}`,
+        url: `${process.env.REACT_APP_API_END_POINT}/lobby/${roomId}`,
         data: {
           status: 'FINISHED',
         },
@@ -85,7 +85,7 @@ export function addPlayerBToLobby(roomId, playerName) {
           'Content-Type': 'application/json',
         },
         method: 'patch',
-        url: `http://localhost:8080/lobby/${roomId}`,
+        url: `${process.env.REACT_APP_API_END_POINT}/lobby/${roomId}`,
         data: {
           playerB: playerName,
         },
