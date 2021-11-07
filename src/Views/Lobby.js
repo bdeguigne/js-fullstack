@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import { useTranslation } from 'react-i18next';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
@@ -14,6 +15,7 @@ import bouclier2 from '../bouclier2.jpg';
 import { SocketContext } from '../socket';
 import AppButton from './AppButton';
 import { getAllLobby, createLobby } from '../redux/action/LobbyAction';
+import '../utils/i18n.js';
 
 const useStyles = makeStyles({
   root: {
@@ -59,6 +61,12 @@ function ImgMediaCard(props) {
   const classes = useStyles();
   const socket = React.useContext(SocketContext);
 
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (event) => {
+    i18n.changeLanguage(event.target.value);
+  };
+
   React.useEffect(() => {
     // socket.on('lobby', (message) => {
     //   console.log('ON LOBBY', message);
@@ -82,7 +90,9 @@ function ImgMediaCard(props) {
 
   function CheckPlayer(playerOne, playerTwo) {
     if (playerOne != null && playerTwo != null) {
-      const phr = `Game :${playerOne.playerOne} vs ${playerOne.playerTwo}`;
+      const phr = ` ${t('Lobby.label')}  ${playerOne.playerOne} vs ${
+        playerOne.playerTwo
+      }`;
       return (
         <Typography gutterBottom variant="h5">
           {phr}
@@ -98,22 +108,45 @@ function ImgMediaCard(props) {
   }
 
   return (
-    <Fade top cascade>
-      <Grid container spacing={2}>
-        {games.map((game) => {
-          if (game.status === 'InProgress') {
+    <div className="Container" onChange={changeLanguage}>
+      <Fade top cascade>
+        <Grid container spacing={2}>
+          {games.map((game) => {
+            if (game.status === 'InProgress') {
+              return (
+                <Grid item>
+                  <Card
+                    className={classes.root}
+                    onClick={() => emit('toto', game.playerOne)}
+                  >
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        alt="Game one"
+                        height="240px"
+                        image={sword}
+                        title="Game One"
+                      />
+                      <CardContent>
+                        <CheckPlayer
+                          playerOne={game.playerOne}
+                          playerTwo={game.playerTwo}
+                        />
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              );
+            }
             return (
               <Grid item>
-                <Card
-                  className={classes.root}
-                  onClick={() => emit('toto', game.playerOne)}
-                >
+                <Card className={classes.root}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
                       alt="Game one"
                       height="240px"
-                      image={sword}
+                      image={bouclier2}
                       title="Game One"
                     />
                     <CardContent>
@@ -126,35 +159,16 @@ function ImgMediaCard(props) {
                 </Card>
               </Grid>
             );
-          }
-          return (
-            <Grid item>
-              <Card className={classes.root}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    alt="Game one"
-                    height="240px"
-                    image={bouclier2}
-                    title="Game One"
-                  />
-                  <CardContent>
-                    <CheckPlayer
-                      playerOne={game.playerOne}
-                      playerTwo={game.playerTwo}
-                    />
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          );
-        })}
-      </Grid>
-      <AppButton
-        text="Create Lobby"
-        handleRoundClick={() => console.log('test')}
-      />
-    </Fade>
+          })}
+        </Grid>
+        <AppButton
+          text={t('Create.label')}
+          handleRoundClick={() => console.log('test')}
+        />
+      </Fade>
+      <input type="radio" value="en" name="language" defaultChecked /> English
+      <input type="radio" value="fr" name="language" /> français
+    </div>
   );
 }
 

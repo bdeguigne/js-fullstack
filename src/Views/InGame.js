@@ -1,10 +1,12 @@
 import React from 'react';
 import '../InGame.css';
 import Fade from 'react-reveal/Fade';
+import { useTranslation } from 'react-i18next';
 import cardBack from '../card-back.png';
 import cards from '../Cards';
 import WinnerAnimation from '../components/AnimationGameEnd';
 import StartRoundButton from './AppButton';
+import '../utils/i18n.js';
 
 export default function Board() {
   function shuffle() {
@@ -16,6 +18,12 @@ export default function Board() {
     }
     return cards;
   }
+
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (event) => {
+    i18n.changeLanguage(event.target.value);
+  };
 
   const [Deck] = React.useState(shuffle());
   const [playerADeck, setplayerADeck] = React.useState([]);
@@ -44,10 +52,10 @@ export default function Board() {
       );
 
       if (playerACard.value > playerBCard.value) {
-        settextwinner('Winner is Pseudo player A');
+        settextwinner(`${t('PlayerAwin.label')}`);
         setpointCounterA(pointCounterA + 1);
       } else if (playerBCard.value > playerACard.value) {
-        settextwinner('Winner is Pseudo player B');
+        settextwinner(`${t('PlayerBwin.label')}`);
         setpointCounterB(pointCounterB + 1);
       } else if (playerACard.value === playerBCard.value) {
         setpointCounterA(pointCounterA + 0);
@@ -56,11 +64,11 @@ export default function Board() {
     }
     if (playerADeck.length === 0 && gameStatus === 'INPROGRESS') {
       if (pointCounterA > pointCounterB) {
-        settextwinner('player A win');
+        settextwinner(`${t('WinnerA.label')}`);
       } else {
-        settextwinner('PLayer B win');
+        settextwinner(`${t('WinnerB.label')}`);
       }
-      setGameStatus('FINISHED');
+      setGameStatus(`${t('End.label')}`);
     }
   }, [playerACard, playerBCard]);
 
@@ -104,7 +112,7 @@ export default function Board() {
   }, [gameStatus]);
 
   return (
-    <div className="board">
+    <div className="board" onChange={changeLanguage}>
       {gameStatus === 'INPROGRESS' && (
         <>
           <div className="top-board">
@@ -124,7 +132,7 @@ export default function Board() {
             <div className="text">{textwinner}</div>
             <div>
               <StartRoundButton
-                text="Start Round"
+                text={t('StartRound.label')}
                 handleRoundClick={() => handleRoundClick()}
               />
             </div>
@@ -146,8 +154,11 @@ export default function Board() {
       )}
       {gameStatus === 'NOTSTARTED' && (
         <div>
+          <input type="radio" value="en" name="language" defaultChecked />{' '}
+          English
+          <input type="radio" value="fr" name="language" /> français
           <StartRoundButton
-            text="Start"
+            text={t('StartG.label')}
             handleRoundClick={() => handleStartClick()}
           />
         </div>

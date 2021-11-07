@@ -1,6 +1,16 @@
 {
-    "Start.label": "Appuyer sur un bouton pour commencer",
-    "Winner.label": "Le gagnant est",
-    "Playerwin.label": " a gagné",
-    "Lobby.label": "Partie : "
+    "Start.label": "Appuyer sur le bouton Lancer le tour pour commencer",
+    "Lobby.label": "Partie : ",
+    "Welcome.label": "Bienvenu Au Jeu De La Bataille",
+    "Pseudo.label": "Pseudo",
+    "WinnerA.label": "Le Gagnant est le joueur A",
+    "PlayerAwin.label": "Joueur A a gagné",
+    "WinnerB.label": "Le Gagnant est le joueur B",
+    "PlayerBwin.label": "Joueur B a gagné",
+    "Psswrd.label": "Mot de Passe",
+    "Create.label": "Crée un Lobby",
+    "StartRound.label": "Lancer le tour",
+    "Login.label": "Connexion",
+    "StartG.label": "Commencer",
+    "End.label": "Fini"
 }

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { Provider } from 'react-redux';
 import App from './App';
+import './utils/i18n.js';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/store/ConfigureStore';
 

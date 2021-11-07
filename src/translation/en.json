@@ -1,6 +1,16 @@
 {
     "Start.label": "Press Start Round to begin",
-    "Winner.label": "Winner is",
-    "Playerwin.label": " win",
-    "Lobby.label": "Games : "
+    "WinnerA.label": "Winner is player A",
+    "PlayerAwin.label": "Player A win",
+    "WinnerB.label": "Winner is player B",
+    "PlayerBwin.label": "Player B win",
+    "Lobby.label": "Games : ",
+    "Welcome.label": "Welcome To War Card Game",
+    "Pseudo.label": "Pseudo",
+    "Psswrd.label": "Password",
+    "Create.label": "Create Lobby",
+    "StartRound.label": "Start Round",
+    "Login.label": "Login",
+    "StartG.label": "Start",
+    "End.label": "FINISHED"
 }
