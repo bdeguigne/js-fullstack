@@ -9,9 +9,17 @@ import cards from '../Cards';
 import WinnerAnimation from '../components/AnimationGameEnd';
 import StartRoundButton from './AppButton';
 import { SocketContext } from '../socket';
-import { setLobbyStatusInProgress } from '../redux/action/LobbyAction';
+import {
+  setLobbyStatusInProgress,
+  setLobbyStatusFinished,
+} from '../redux/action/LobbyAction';
 
-function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
+function Board({
+  isReady,
+  roomID,
+  setLobbyStatusInProgressAction,
+  setLobbyStatusFinishedAction,
+}) {
   function shuffle() {
     for (let index = cards.length - 1; index > 0; index -= 1) {
       const NewIndex = Math.floor(Math.random() * (index + 1));
@@ -66,6 +74,7 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
       if (message.event === 'finished') {
         settextwinner(message.win);
         setGameStatus('FINISHED');
+        setLobbyStatusFinishedAction(roomID);
       }
       console.log('game socket on', message);
     });
@@ -156,11 +165,21 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
               {playerACard !== undefined && (
                 <img className="card" src={playerACard.assets_black} alt="" />
               )}
+              <span className="pointcounter"> {pointCounterA}</span>
             </div>
           </div>
           <div className="middle-board">
-            <span> {pointCounterA}</span>
-            <div className="text">{textwinner}</div>
+            <div
+              className="text"
+              style={{
+                fontSize: 'xxx-large',
+                fontFamily: 'cursive',
+                filter: 'drop-shadow(5px 4px 6px)',
+                color: 'yellow',
+              }}
+            >
+              {textwinner}
+            </div>
             <div>
               <StartRoundButton
                 text="Start Round"
@@ -174,11 +193,11 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
                 <img className="card" src={cardBack} alt="ImageCardBack" />
               </Fade>
             </div>
-            <span> {pointCounterB}</span>
             <div className="card-slot">
               {playerBCard !== undefined && (
                 <img className="card" src={playerBCard.assets_white} alt="" />
               )}
+              <span className="pointcounter"> {pointCounterB}</span>
             </div>
           </div>
         </>
@@ -199,13 +218,23 @@ function Board({ isReady, roomID, setLobbyStatusInProgressAction }) {
         </div>
       )}
       {gameStatus === 'FINISHED' && (
-        <div className="WinnerIs">
+        <div
+          className="WinnerIs"
+          style={{
+            fontSize: 'xxx-large',
+            fontFamily: 'cursive',
+            filter: 'drop-shadow(5px 4px 6px)',
+            color: 'yellow',
+          }}
+        >
           <WinnerAnimation className="Animation" />
           {textwinner}
-          <StartRoundButton
-            text="Return To Lobby"
-            handleRoundClick={() => handleLobbyClick()}
-          />
+          <div>
+            <StartRoundButton
+              text="Return To Lobby"
+              handleRoundClick={() => handleLobbyClick()}
+            />
+          </div>
         </div>
       )}
     </div>
@@ -217,6 +246,7 @@ Board.propTypes = {
   roomID: PropTypes.string.isRequired,
   // username: PropTypes.string.isRequired,
   setLobbyStatusInProgressAction: PropTypes.func.isRequired,
+  setLobbyStatusFinishedAction: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -229,6 +259,7 @@ const mapStateToProps = (state) => {
 
 const actionCreators = {
   setLobbyStatusInProgressAction: setLobbyStatusInProgress,
+  setLobbyStatusFinishedAction: setLobbyStatusFinished,
 };
 
 const connectedBoard = connect(mapStateToProps, actionCreators)(Board);
