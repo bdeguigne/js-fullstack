@@ -7,7 +7,7 @@ import { Send } from '@material-ui/icons';
 import '../Home.css';
 import '../utils/i18n.js';
 
-function Forms({ onSubmit }) {
+function Forms({ onSubmit, onRegister }) {
   const [Pseudo, setPseudo] = useState('');
   const [Password, setPassword] = useState('');
   const { t, i18n } = useTranslation();
@@ -69,6 +69,21 @@ function Forms({ onSubmit }) {
             {t('Login.label')}
           </Button>
         </div>
+        <div>
+          <Button
+            style={{
+              marginTop: '12px',
+              backgroundColor: 'cyan',
+              color: 'black',
+            }}
+            fullWidth="100%"
+            type="button"
+            onClick={() => onRegister(Pseudo, Password)}
+            variant="contained"
+          >
+            {t('Register.label')}
+          </Button>
+        </div>
       </form>
     </div>
   );
@@ -76,6 +91,7 @@ function Forms({ onSubmit }) {
 
 Forms.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onRegister: PropTypes.func.isRequired,
 };
 
 export default Forms;

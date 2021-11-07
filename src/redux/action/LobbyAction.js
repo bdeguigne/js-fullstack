@@ -9,7 +9,7 @@ export function getAllLobby() {
       method: 'get',
       url: 'http://localhost:8080/lobby',
     });
-    console.log(res);
+    return res.data;
   };
 }
 

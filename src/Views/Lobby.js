@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -9,13 +9,16 @@ import { useTranslation } from 'react-i18next';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import Fade from 'react-reveal/Flip';
+import Fade from 'react-reveal/Fade';
+import { useNavigate } from 'react-router-dom';
 import sword from '../Sword.jpg';
 import bouclier2 from '../bouclier2.jpg';
 import { SocketContext } from '../socket';
 import AppButton from './AppButton';
 import { getAllLobby, createLobby } from '../redux/action/LobbyAction';
 import '../utils/i18n.js';
+import setReady from '../redux/action/ReadyAction';
+import setRoomId from '../redux/action/RoomAction';
 
 const useStyles = makeStyles({
   root: {
@@ -24,42 +27,12 @@ const useStyles = makeStyles({
   },
 });
 
-const games = [
-  {
-    id: 1,
-    status: 'NotStarted',
-    playerOne: 'bibiii',
-    playerTwo: 'loulou',
-  },
-  {
-    id: 2,
-    status: 'InProgress',
-    playerOne: 'volta',
-    playerTwo: 'hector',
-  },
-  {
-    id: 2,
-    status: 'InProgress',
-    playerOne: 'volta',
-    playerTwo: 'hector',
-  },
-  {
-    id: 2,
-    status: 'InProgress',
-    playerOne: 'volta',
-    playerTwo: 'hector',
-  },
-  {
-    id: 2,
-    status: 'InProgress',
-    playerOne: 'volta',
-    playerTwo: 'hector',
-  },
-];
-
 function ImgMediaCard(props) {
   const classes = useStyles();
   const socket = React.useContext(SocketContext);
+  const navigate = useNavigate();
+
+  const [gameLobby, setgameLobby] = useState([]);
 
   const { t, i18n } = useTranslation();
 
@@ -67,16 +40,20 @@ function ImgMediaCard(props) {
     i18n.changeLanguage(event.target.value);
   };
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     // socket.on('lobby', (message) => {
     //   console.log('ON LOBBY', message);
     // });
-    props.getAllLobby();
+    setgameLobby(await props.getAllLobby());
+    console.log(gameLobby);
+
     console.log('ca c est lourd !!!');
-    socket.emit('lobby', {
-      event: 'join',
-      playerId: '1234',
-      roomId: '1234',
+    socket.on('lobby', (message) => {
+      if (message.event === 'join') {
+        props.setReady(message.ready);
+        navigate('/lobby/game');
+      }
+      console.log(message);
     });
   }, []);
 
@@ -102,23 +79,21 @@ function ImgMediaCard(props) {
 
     return (
       <Typography gutterBottom variant="h5">
-        No player
+        {t('Noplayer.label')}
       </Typography>
     );
   }
 
   return (
     <div className="Container" onChange={changeLanguage}>
-      <Fade top cascade>
-        <Grid container spacing={2}>
-          {games.map((game) => {
-            if (game.status === 'InProgress') {
-              return (
-                <Grid item>
-                  <Card
-                    className={classes.root}
-                    onClick={() => emit('toto', game.playerOne)}
-                  >
+      <Grid container spacing={2}>
+        {gameLobby.map((game) => {
+          console.log(game.id);
+          if (game.status === 'InProgress') {
+            return (
+              <Grid item>
+                <Fade top>
+                  <Card className={classes.root}>
                     <CardActionArea>
                       <CardMedia
                         component="img"
@@ -129,18 +104,27 @@ function ImgMediaCard(props) {
                       />
                       <CardContent>
                         <CheckPlayer
-                          playerOne={game.playerOne}
-                          playerTwo={game.playerTwo}
+                          playerOne={game.playerA}
+                          playerTwo={game.playerB}
                         />
                       </CardContent>
                     </CardActionArea>
                   </Card>
-                </Grid>
-              );
-            }
-            return (
-              <Grid item>
-                <Card className={classes.root}>
+                </Fade>
+              </Grid>
+            );
+          }
+          return (
+            <Grid item>
+              <Fade top>
+                <Card
+                  className={classes.root}
+                  onClick={() => {
+                    props.setRoomId(game.id);
+
+                    emit(props.username, game.id);
+                  }}
+                >
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -151,21 +135,22 @@ function ImgMediaCard(props) {
                     />
                     <CardContent>
                       <CheckPlayer
-                        playerOne={game.playerOne}
-                        playerTwo={game.playerTwo}
+                        playerOne={game.playerA}
+                        playerTwo={game.playerB}
                       />
                     </CardContent>
                   </CardActionArea>
                 </Card>
-              </Grid>
-            );
-          })}
-        </Grid>
-        <AppButton
-          text={t('Create.label')}
-          handleRoundClick={() => console.log('test')}
-        />
-      </Fade>
+              </Fade>
+            </Grid>
+          );
+        })}
+        {/* <div className="Container" onChange={changeLanguage}>        </div> */}
+      </Grid>
+      <AppButton
+        text={t('Create.label')}
+        handleRoundClick={() => props.createLobby(props.username)}
+      />
       <input type="radio" value="en" name="language" defaultChecked /> English
       <input type="radio" value="fr" name="language" /> français
     </div>
@@ -174,13 +159,25 @@ function ImgMediaCard(props) {
 
 ImgMediaCard.propTypes = {
   getAllLobby: PropTypes.func.isRequired,
+  createLobby: PropTypes.func.isRequired,
+  setReady: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  setRoomId: PropTypes.func.isRequired,
 };
 
 const actionCreators = {
   getAllLobby,
   createLobby,
+  setReady,
+  setRoomId,
 };
 
-const connectedLobby = connect(null, actionCreators)(ImgMediaCard);
+const mapStateToProps = (state) => {
+  return {
+    username: state.sample.username,
+    roomID: state.sample.roomID,
+  };
+};
+const connectedLobby = connect(mapStateToProps, actionCreators)(ImgMediaCard);
 
 export default connectedLobby;
