@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../InGame.css';
 import Fade from 'react-reveal/Fade';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import cardBack from '../card-back.png';
 import cards from '../Cards';
@@ -20,6 +21,7 @@ function Board({ isReady, roomID }) {
     return cards;
   }
 
+  const navigate = useNavigate();
   const socket = React.useContext(SocketContext);
   const [Deck] = React.useState(shuffle());
   const [playerADeck, setplayerADeck] = React.useState([]);
@@ -31,6 +33,8 @@ function Board({ isReady, roomID }) {
   );
   const [pointCounterA, setpointCounterA] = React.useState(0);
   const [pointCounterB, setpointCounterB] = React.useState(0);
+  const [pseudoJ1, setpseudoj1] = useState('J1');
+  const [pseudoJ2, setpseudoj2] = useState('J2');
   const [gameStatus, setGameStatus] = React.useState('NOTSTARTED');
 
   function handleStartClick() {
@@ -40,10 +44,16 @@ function Board({ isReady, roomID }) {
     });
   }
 
+  function handleLobbyClick() {
+    navigate('/lobby');
+  }
+
   React.useEffect(async () => {
     socket.on('game', (message) => {
       if (message.event === 'play') {
         setGameStatus('INPROGRESS');
+        setpseudoj1(message.playerA.username);
+        setpseudoj2(message.playerB.username);
         console.log('en bas la en bas');
         console.log('test');
         setplayerACard(message.playerA.card);
@@ -51,6 +61,10 @@ function Board({ isReady, roomID }) {
         setplayerBCard(message.playerB.card);
         setpointCounterA(message.playerA.points);
         setpointCounterB(message.playerB.points);
+      }
+      if (message.event === 'finished') {
+        settextwinner(message.win);
+        setGameStatus('FINISHED');
       }
       console.log('game socket on', message);
     });
@@ -67,9 +81,9 @@ function Board({ isReady, roomID }) {
       );
 
       if (playerACard.value > playerBCard.value) {
-        settextwinner('Winner is Pseudo player A');
+        settextwinner(`Winner is : ${pseudoJ1}`);
       } else if (playerBCard.value > playerACard.value) {
-        settextwinner('Winner is Pseudo player B');
+        settextwinner(`Winner is : ${pseudoJ2}`);
       } else if (playerACard.value === playerBCard.value) {
         setpointCounterA(pointCounterA + 0);
         setpointCounterB(pointCounterB + 0);
@@ -184,6 +198,10 @@ function Board({ isReady, roomID }) {
         <div className="WinnerIs">
           <WinnerAnimation className="Animation" />
           {textwinner}
+          <StartRoundButton
+            text="Return To Lobby"
+            handleRoundClick={() => handleLobbyClick()}
+          />
         </div>
       )}
     </div>

@@ -13,12 +13,6 @@ body {
   justify-content: space-between;
 }
 
-
-@keyframes Draw {
-  0%   { bottom:0px;}
-  100% { bottom: 200px;}
-}
-
 .computer-deck {
   width: 200px;
   height: 200px;
@@ -32,9 +26,6 @@ body {
   height: 100%;
   position: relative;
   filter: drop-shadow(0px 0px 30px rgba(0, 0, 0, 0.527));
-  animation-name: Draw;
-  animation-duration: 4s;
-  animation-delay: 3s;
 }
 
 .WinnerIs {
