@@ -20,13 +20,19 @@ cd ../path/to/the/file
 ```
 ```
 npm install
+# Start in dev environment
 npm run start:dev
+
+# OR if you want a builded version
+npm run start:prod
 ```
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-<h3>Builded version</h3>
+<h3>Hosted version</h3>
+
+The app is hosted at this url : [War-Card-Game](https://war-card-game.netlify.app/)
 
 ## What's included
 
