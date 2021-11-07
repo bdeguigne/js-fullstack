@@ -1,12 +1,15 @@
 import React from 'react';
 import '../InGame.css';
 import Fade from 'react-reveal/Fade';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import cardBack from '../card-back.png';
 import cards from '../Cards';
 import WinnerAnimation from '../components/AnimationGameEnd';
 import StartRoundButton from './AppButton';
+import { SocketContext } from '../socket';
 
-export default function Board() {
+function Board({ isReady, roomID }) {
   function shuffle() {
     for (let index = cards.length - 1; index > 0; index -= 1) {
       const NewIndex = Math.floor(Math.random() * (index + 1));
@@ -17,6 +20,7 @@ export default function Board() {
     return cards;
   }
 
+  const socket = React.useContext(SocketContext);
   const [Deck] = React.useState(shuffle());
   const [playerADeck, setplayerADeck] = React.useState([]);
   const [playerBDeck, setplayerBDeck] = React.useState([]);
@@ -30,8 +34,27 @@ export default function Board() {
   const [gameStatus, setGameStatus] = React.useState('NOTSTARTED');
 
   function handleStartClick() {
-    setGameStatus('INPROGRESS');
+    socket.emit('lobby', {
+      event: 'play',
+      roomId: roomID,
+    });
   }
+
+  React.useEffect(async () => {
+    socket.on('game', (message) => {
+      if (message.event === 'play') {
+        setGameStatus('INPROGRESS');
+        console.log('en bas la en bas');
+        console.log('test');
+        setplayerACard(message.playerA.card);
+        console.log(playerACard);
+        setplayerBCard(message.playerB.card);
+        setpointCounterA(message.playerA.points);
+        setpointCounterB(message.playerB.points);
+      }
+      console.log('game socket on', message);
+    });
+  }, []);
 
   React.useEffect(() => {
     if (playerACard?.value !== undefined && playerBCard?.value !== undefined) {
@@ -45,10 +68,8 @@ export default function Board() {
 
       if (playerACard.value > playerBCard.value) {
         settextwinner('Winner is Pseudo player A');
-        setpointCounterA(pointCounterA + 1);
       } else if (playerBCard.value > playerACard.value) {
         settextwinner('Winner is Pseudo player B');
-        setpointCounterB(pointCounterB + 1);
       } else if (playerACard.value === playerBCard.value) {
         setpointCounterA(pointCounterA + 0);
         setpointCounterB(pointCounterB + 0);
@@ -65,8 +86,11 @@ export default function Board() {
   }, [playerACard, playerBCard]);
 
   function handleRoundClick() {
-    setplayerACard(playerADeck.pop());
-    setplayerBCard(playerBDeck.pop());
+    socket.emit('game', {
+      event: 'next',
+      roomId: roomID,
+    }); // setplayerACard(playerADeck.pop());
+    // setplayerBCard(playerBDeck.pop());
   }
 
   // function StartGameButton() {
@@ -146,10 +170,14 @@ export default function Board() {
       )}
       {gameStatus === 'NOTSTARTED' && (
         <div>
-          <StartRoundButton
-            text="Start"
-            handleRoundClick={() => handleStartClick()}
-          />
+          {isReady ? (
+            <StartRoundButton
+              text="Start"
+              handleRoundClick={() => handleStartClick()}
+            />
+          ) : (
+            <h1> WAITING FOR OTHER PLAYER </h1>
+          )}
         </div>
       )}
       {gameStatus === 'FINISHED' && (
@@ -161,3 +189,22 @@ export default function Board() {
     </div>
   );
 }
+
+Board.propTypes = {
+  isReady: PropTypes.bool.isRequired,
+  roomID: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
+  username: PropTypes.string.isRequired,
+};
+
+const mapStateToProps = (state) => {
+  return {
+    username: state.sample.username,
+    isReady: state.sample.isReady,
+    roomID: state.sample.roomID,
+  };
+};
+
+const connectedBoard = connect(mapStateToProps, {})(Board);
+
+export default connectedBoard;

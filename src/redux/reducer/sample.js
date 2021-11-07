@@ -1,16 +1,26 @@
 const initialState = {
-  name: ' Kylian Gence',
+  isReady: false,
+  username: '',
+  roomID: '',
 };
 
 const sampleReducer = (state = initialState, action) => {
   switch (action.type) {
-    // Sample of a reducer action
-    /* case ACTION:
+    case 'READY':
       return {
         ...state,
-        ...action.payload
+        isReady: action.bool,
       };
-      */
+    case 'USER':
+      return {
+        ...state,
+        username: action.user,
+      };
+    case 'ROOMID':
+      return {
+        ...state,
+        roomID: action.roomid,
+      };
     default:
       return state;
   }
