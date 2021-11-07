@@ -33,17 +33,13 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint \"./**/*.js\"",
     "start:dev": "env-cmd -f ./.dev.env react-scripts start",
     "build:dev": "env-cmd -f ./.dev.env npm run-script build",
-    "start:qa": "env-cmd -f ./.qa.env react-scripts start",
-    "build:qa": "env-cmd -f ./.qa.env npm run-script build",
     "start:prod": "env-cmd -f ./.prod.env react-scripts start",
-    "build:prod": "env-cmd -f ./.prod.env npm run-script build"
+    "build:prod": "env-cmd -f ./.prod.env npm run-script build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint \"./**/*.js\""
   },
   "eslintConfig": {
     "extends": [
