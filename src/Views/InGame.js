@@ -34,7 +34,6 @@ function Board({
   const socket = React.useContext(SocketContext);
   const [Deck] = React.useState(shuffle());
   const [playerADeck, setplayerADeck] = React.useState([]);
-  const [playerBDeck, setplayerBDeck] = React.useState([]);
   const [playerACard, setplayerACard] = React.useState([]);
   const [playerBCard, setplayerBCard] = React.useState([]);
   const [textwinner, settextwinner] = React.useState(
@@ -63,10 +62,7 @@ function Board({
         setGameStatus('INPROGRESS');
         setpseudoj1(message.playerA.username);
         setpseudoj2(message.playerB.username);
-        console.log('en bas la en bas');
-        console.log('test');
         setplayerACard(message.playerA.card);
-        console.log(playerACard);
         setplayerBCard(message.playerB.card);
         setpointCounterA(message.playerA.points);
         setpointCounterB(message.playerB.points);
@@ -76,20 +72,11 @@ function Board({
         setGameStatus('FINISHED');
         setLobbyStatusFinishedAction(roomID);
       }
-      console.log('game socket on', message);
     });
   }, []);
 
   React.useEffect(() => {
     if (playerACard?.value !== undefined && playerBCard?.value !== undefined) {
-      console.log(
-        'player B value =>',
-        playerBCard.value,
-        'player A value =>',
-        playerACard.value,
-        playerADeck,
-      );
-
       if (playerACard.value > playerBCard.value) {
         settextwinner(`Winner is : ${pseudoJ1}`);
       } else if (playerBCard.value > playerACard.value) {
@@ -134,22 +121,7 @@ function Board({
   React.useEffect(() => {
     const deckMidpoint = Math.ceil(Deck.length / 2);
     setplayerADeck(Deck.slice(0, deckMidpoint));
-    setplayerBDeck(Deck.slice(deckMidpoint, Deck.length));
   }, [Deck]);
-
-  React.useEffect(() => {
-    console.log('Player A Black =>', playerADeck);
-    console.log('Player B White =>', playerBDeck);
-  }, [playerADeck, playerBDeck]);
-
-  React.useEffect(() => {
-    console.log('Player A Black Card  =>', playerACard);
-    console.log('Player B White Card =>', playerBCard);
-  }, [playerACard, playerBCard]);
-
-  React.useEffect(() => {
-    console.log('Game Status =>', gameStatus);
-  }, [gameStatus]);
 
   return (
     <div className="board">

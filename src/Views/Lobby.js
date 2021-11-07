@@ -37,19 +37,13 @@ function ImgMediaCard(props) {
   const [gameLobby, setgameLobby] = useState([]);
 
   React.useEffect(async () => {
-    // socket.on('lobby', (message) => {
-    //   console.log('ON LOBBY', message);
-    // });
     setgameLobby(await props.getAllLobby());
-    console.log(gameLobby);
 
-    console.log('ca c est lourd !!!');
     socket.on('lobby', (message) => {
       if (message.event === 'join') {
         props.setReady(message.ready);
         navigate('/lobby/game');
       }
-      console.log(message);
     });
   }, []);
 
@@ -82,7 +76,6 @@ function ImgMediaCard(props) {
     <>
       <Grid container spacing={2}>
         {gameLobby.map((game) => {
-          console.log(game.id);
           if (game.status === 'IN_PROGRESS') {
             return (
               <Grid item>
