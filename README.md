@@ -27,7 +27,6 @@ npm run start:dev
 npm run build:prod
 ```
 
-Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 <h3>Hosted version</h3>
